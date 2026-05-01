@@ -269,6 +269,57 @@
             cursor: pointer;
         }
         .modal-close:hover { background: rgba(88,166,255,0.2); }
+
+        /* Automations */
+        .auto-card {
+            background: rgba(22,27,34,0.8);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+        .auto-card:hover { border-color: rgba(255,255,255,0.15); }
+        .auto-card.error { border-left: 3px solid #f85149; }
+        .auto-card.active { border-left: 3px solid #3fb950; }
+        .auto-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .auto-icon { font-size: 22px; }
+        .auto-info { flex: 1; }
+        .auto-name { font-size: 14px; font-weight: 600; color: #e6edf3; }
+        .auto-schedule { font-size: 12px; color: #7d8590; margin-top: 2px; }
+        .auto-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        .auto-badge.active { background: rgba(63,185,80,0.15); color: #3fb950; border: 1px solid rgba(63,185,80,0.3); }
+        .auto-badge.error { background: rgba(248,81,73,0.15); color: #f85149; border: 1px solid rgba(248,81,73,0.3); }
+        .auto-details { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px; }
+        .auto-detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            padding: 3px 0;
+            color: #7d8590;
+        }
+        .auto-detail-row span:last-child { color: #c9d1d9; text-align: right; max-width: 65%; word-break: break-all; }
+        .auto-detail-row.error-msg span:last-child { color: #f85149; }
+        .auto-message {
+            margin-top: 10px;
+            background: rgba(88,166,255,0.05);
+            border: 1px solid rgba(88,166,255,0.1);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 11px;
+            color: #7d8590;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -302,6 +353,7 @@
         <button class="tab-btn active" onclick="showTab('files', this)">📁 Files</button>
         <button class="tab-btn" onclick="showTab('memory', this)">🧠 Memory</button>
         <button class="tab-btn" onclick="showTab('systems', this)">🔌 Systems</button>
+        <button class="tab-btn" onclick="showTab('automations', this)">⚙️ אוטומציות</button>
     </div>
 
     <!-- Files Tab -->
@@ -420,6 +472,67 @@
             </div>
         </div>
     </div>
+
+    <!-- Automations Tab -->
+    <div class="tab-panel" id="tab-automations">
+        <div style="margin-bottom:20px">
+            <h3 style="font-size:15px;font-weight:600;color:#e6edf3">אוטומציות פעילות</h3>
+            <p style="font-size:12px;color:#7d8590;margin-top:4px">כל ה-cron jobs וה-scheduled tasks</p>
+        </div>
+
+        <div style="margin-bottom:12px;font-size:11px;font-weight:600;color:#7d8590;text-transform:uppercase;letter-spacing:0.8px">🤖 OpenClaw Jobs</div>
+
+        <div class="auto-card error">
+            <div class="auto-header">
+                <div class="auto-icon">📅</div>
+                <div class="auto-info">
+                    <div class="auto-name">תזכורת לו"ז יומי — Nachmani Family</div>
+                    <div class="auto-schedule">⏰ כל יום חול ב-04:15 UTC (07:15 ישראל)</div>
+                </div>
+                <span class="auto-badge error">⚠️ שגיאה</span>
+            </div>
+            <div class="auto-details">
+                <div class="auto-detail-row"><span>יעד</span><span>WhatsApp — Nachmani Family</span></div>
+                <div class="auto-detail-row"><span>הרצה אחרונה</span><span>לפני יום</span></div>
+                <div class="auto-detail-row"><span>שגיאות רצופות</span><span style="color:#f85149">13</span></div>
+                <div class="auto-detail-row error-msg"><span>שגיאה</span><span>Requires E.164 / group JID</span></div>
+            </div>
+            <div class="auto-message">💬 "בדקי את היומן האישי של דורון... שלחי סיכום לקבוצת Nachmani Family. חתמי — דורה ❤️"</div>
+        </div>
+
+        <div style="margin-bottom:12px;margin-top:24px;font-size:11px;font-weight:600;color:#7d8590;text-transform:uppercase;letter-spacing:0.8px">⚙️ System Jobs</div>
+
+        <div class="auto-card active">
+            <div class="auto-header">
+                <div class="auto-icon">🛡️</div>
+                <div class="auto-info">
+                    <div class="auto-name">Gateway Guard</div>
+                    <div class="auto-schedule">⏰ כל 2 דקות</div>
+                </div>
+                <span class="auto-badge active">פעיל</span>
+            </div>
+            <div class="auto-details">
+                <div class="auto-detail-row"><span>סקריפט</span><span>/opt/ocana/gateway-guard.sh</span></div>
+                <div class="auto-detail-row"><span>לוג</span><span>/var/log/ocana-install.log</span></div>
+            </div>
+        </div>
+
+        <div class="auto-card active">
+            <div class="auto-header">
+                <div class="auto-icon">📊</div>
+                <div class="auto-info">
+                    <div class="auto-name">Usage Collector</div>
+                    <div class="auto-schedule">⏰ כל 5 דקות</div>
+                </div>
+                <span class="auto-badge active">פעיל</span>
+            </div>
+            <div class="auto-details">
+                <div class="auto-detail-row"><span>סקריפט</span><span>/opt/ocana/usage-collector.sh</span></div>
+                <div class="auto-detail-row"><span>לוג</span><span>/var/log/usage-collector.log</span></div>
+            </div>
+        </div>
+    </div>
+
 </main>
 
 <!-- Right Status Panel -->
