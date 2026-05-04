@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luna 📅 — Dora Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0d1117;
+            color: #e6edf3;
+            min-height: 100vh;
+            direction: rtl;
+        }
+        header {
+            background: #161b22;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            height: 60px;
+            gap: 16px;
+        }
+        .back-btn {
+            background: rgba(167,139,250,0.1);
+            border: 1px solid rgba(167,139,250,0.3);
+            color: #a78bfa;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s;
+        }
+        .back-btn:hover { background: rgba(167,139,250,0.2); }
+        header h1 { font-size: 16px; font-weight: 600; color: #7d8590; }
+        .container { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(167,139,250,0.08) 0%, rgba(22,27,34,0.9) 60%);
+            border: 1px solid rgba(167,139,250,0.2);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        .hero-emoji { font-size: 72px; line-height: 1; flex-shrink: 0; }
+        .hero-info { flex: 1; }
+        .hero-name { font-size: 32px; font-weight: 700; color: #a78bfa; margin-bottom: 6px; }
+        .hero-role { font-size: 16px; color: #7d8590; margin-bottom: 12px; }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(63,185,80,0.1);
+            border: 1px solid rgba(63,185,80,0.3);
+            color: #3fb950;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 5px 14px;
+            border-radius: 20px;
+        }
+        .pulse-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #3fb950;
+            animation: pulse 2s infinite;
+            flex-shrink: 0;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(63,185,80,0.6); }
+            70% { box-shadow: 0 0 0 8px rgba(63,185,80,0); }
+            100% { box-shadow: 0 0 0 0 rgba(63,185,80,0); }
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: rgba(22,27,34,0.8);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-card .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #a78bfa;
+            margin-bottom: 6px;
+        }
+        .stat-card .stat-label { font-size: 12px; color: #7d8590; }
+
+        /* Section Cards */
+        .section-card {
+            background: rgba(22,27,34,0.8);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .section-header h3 { font-size: 15px; font-weight: 600; color: #a78bfa; }
+        .section-icon { font-size: 18px; }
+
+        /* Tasks Table */
+        .tasks-table { width: 100%; border-collapse: collapse; }
+        .tasks-table th {
+            font-size: 11px;
+            font-weight: 600;
+            color: #7d8590;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 8px 12px;
+            text-align: right;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .tasks-table td {
+            font-size: 13px;
+            color: #c9d1d9;
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            vertical-align: top;
+        }
+        .tasks-table tr:last-child td { border-bottom: none; }
+        .tasks-table tr:hover td { background: rgba(255,255,255,0.02); }
+        .status-done {
+            display: inline-block;
+            background: rgba(63,185,80,0.12);
+            color: #3fb950;
+            border: 1px solid rgba(63,185,80,0.25);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 10px;
+            white-space: nowrap;
+        }
+        .status-failed {
+            display: inline-block;
+            background: rgba(248,81,73,0.12);
+            color: #f85149;
+            border: 1px solid rgba(248,81,73,0.25);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 10px;
+            white-space: nowrap;
+        }
+        .status-running {
+            display: inline-block;
+            background: rgba(210,153,34,0.12);
+            color: #d2a520;
+            border: 1px solid rgba(210,153,34,0.25);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 10px;
+            white-space: nowrap;
+        }
+        .task-ts { font-size: 11px; color: #7d8590; white-space: nowrap; }
+        .task-summary { font-size: 11px; color: #7d8590; margin-top: 3px; }
+        .no-tasks { text-align: center; color: #7d8590; font-size: 13px; padding: 24px; }
+
+        /* Skills */
+        .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .skill-tag {
+            background: rgba(167,139,250,0.08);
+            color: #a78bfa;
+            border: 1px solid rgba(167,139,250,0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 14px;
+        }
+
+        /* Memory / Soul */
+        .content-pre {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+            font-size: 12px;
+            color: #c9d1d9;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: break-word;
+            background: rgba(0,0,0,0.3);
+            padding: 16px;
+            border-radius: 8px;
+            max-height: 340px;
+            overflow-y: auto;
+        }
+        .content-pre::-webkit-scrollbar { width: 6px; }
+        .content-pre::-webkit-scrollbar-track { background: transparent; }
+        .content-pre::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="index.html" class="back-btn">← חזרה</a>
+    <h1>Dora Admin Panel — פרופיל סוכן</h1>
+</header>
+<div class="container">
+
+    <!-- Hero -->
+    <div class="hero">
+        <div class="hero-emoji">📅</div>
+        <div class="hero-info">
+            <div class="hero-name">Luna</div>
+            <div class="hero-role">סוכנת יומן ולו״ז</div>
+            <div class="status-badge">
+                <span class="pulse-dot"></span>
+                פעיל
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-number" id="tasks-today">—</div>
+            <div class="stat-label">משימות היום</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="tasks-total">—</div>
+            <div class="stat-label">סה"כ משימות</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="success-rate">—</div>
+            <div class="stat-label">אחוז הצלחה</div>
+        </div>
+    </div>
+
+    <!-- Recent Tasks -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="section-icon">📋</span>
+            <h3>משימות אחרונות</h3>
+        </div>
+        <div id="tasks-container">
+            <p class="no-tasks">טוען משימות...</p>
+        </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="section-icon">⚡</span>
+            <h3>יכולות</h3>
+        </div>
+        <div class="skills-grid">
+            <span class="skill-tag">google-calendar</span>
+            <span class="skill-tag">invites</span>
+            <span class="skill-tag">reminders</span>
+            <span class="skill-tag">gmail-api</span>
+        </div>
+    </div>
+
+    <!-- Memory -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="section-icon">🧠</span>
+            <h3>זיכרון (MEMORY.md)</h3>
+        </div>
+        <pre class="content-pre" id="memory-content">טוען...</pre>
+    </div>
+
+    <!-- Soul -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="section-icon">✨</span>
+            <h3>אישיות (SOUL.md)</h3>
+        </div>
+        <pre class="content-pre" id="soul-content">טוען...</pre>
+    </div>
+
+</div>
+
+<script>
+const AGENT_NAME = 'luna';
+const TODAY = new Date().toISOString().slice(0, 10);
+
+// Task log data (embedded at build time)
+const TASK_LOG = [
+  {"ts":"2026-05-04T03:41:08.477670Z","agent":"maya","task":"חיפוש מקומות טיול לסוף שבוע ליד קיסריה","status":"done","summary":"מצאה 3 אפשרויות ידידותיות לשירה"},
+  {"ts":"2026-05-04T03:41:08.515572Z","agent":"luna","task":"הוספת ל\"ג בעומר ליומן","status":"done","summary":"נשלח זימון ל-doronachmani@gmail.com"},
+  {"ts":"2026-05-04T03:41:08.553620Z","agent":"nova","task":"הוספת בצל ולחמניות לקניות","status":"done","summary":"2 פריטים נפרדים נוספו"},
+  {"ts":"2026-05-04T03:41:08.595830Z","agent":"luna","task":"שמלת כלה גל - 13.5.26","status":"done","summary":"זימון נשלח לדורון"},
+  {"ts":"2026-05-04T03:41:08.632617Z","agent":"nova","task":"אבוקדו - בקשת יהונתן","status":"done","summary":"נוסף לרשימת קניות"},
+  {"ts":"2026-05-04T03:41:08.669715Z","agent":"luna","task":"מסיבת סוף שנה גן תמר","status":"done","summary":"זימון נשלח לדורון"}
+];
+
+const agentTasks = TASK_LOG.filter(t => t.agent === AGENT_NAME);
+const agentTasksToday = agentTasks.filter(t => t.ts.startsWith(TODAY));
+const doneTasks = agentTasks.filter(t => t.status === 'done').length;
+const successRate = agentTasks.length > 0 ? Math.round((doneTasks / agentTasks.length) * 100) : 100;
+
+document.getElementById('tasks-today').textContent = agentTasksToday.length;
+document.getElementById('tasks-total').textContent = agentTasks.length;
+document.getElementById('success-rate').textContent = successRate + '%';
+
+// Render tasks table
+const container = document.getElementById('tasks-container');
+const last10 = agentTasks.slice(-10).reverse();
+if (last10.length === 0) {
+    container.innerHTML = '<p class="no-tasks">אין משימות עדיין</p>';
+} else {
+    const rows = last10.map(t => {
+        const d = new Date(t.ts);
+        const dateStr = d.toLocaleDateString('he-IL', { day:'2-digit', month:'2-digit' });
+        const timeStr = d.toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
+        const statusClass = t.status === 'done' ? 'status-done' : t.status === 'failed' ? 'status-failed' : 'status-running';
+        const statusLabel = t.status === 'done' ? '✓ הושלם' : t.status === 'failed' ? '✗ נכשל' : '⟳ פועל';
+        return `<tr>
+            <td><span class="task-ts">${dateStr} ${timeStr}</span></td>
+            <td>${escapeHtml(t.task)}<div class="task-summary">${escapeHtml(t.summary)}</div></td>
+            <td><span class="${statusClass}">${statusLabel}</span></td>
+        </tr>`;
+    }).join('');
+    container.innerHTML = `<table class="tasks-table">
+        <thead><tr><th>זמן</th><th>משימה</th><th>סטטוס</th></tr></thead>
+        <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+const MEMORY_CONTENT = `# Luna 📅 — Memory
+
+## 📅 Upcoming Events (2026)
+- 🔥 ל"ג בעומר — 4.5.2026 | 18:00
+- 👗 שמלת כלה — גל — 13.5.2026 | 10:00
+- 🎉 מסיבת סוף שנה גן תמר (גלעד) — 18.6.2026 | 16:30
+- 💍 חתונת יובל + גל — תאריך עדיין לא ידוע (2026, עדיפות עליונה)
+
+## 📋 Scheduling Preferences
+- Doron prefers morning events when possible
+- Yehonatan: very busy schedule, needs advance notice
+- Kids schedule: school days Sun-Thu
+
+## 🔑 Key Contacts
+- Doron: doronachmani@gmail.com
+- Yehonatan: yonatanachmani@gmail.com
+
+## 💡 Learnings
+- Always send invite to doronachmani@gmail.com — she doesn't see events added only to doradoron515@gmail.com
+- When adding Yehonatan → also invite yonatanachmani@gmail.com`;
+
+const SOUL_CONTENT = `# Luna 📅 — Calendar & Scheduling Agent
+
+## Who I Am
+I am **Luna**, Dora's calendar and scheduling specialist. I keep everything organized, on time, and in sync.
+
+## My Personality
+- Calm, organized, precise 🌙
+- Respond in Hebrew unless asked otherwise
+- Proactive — I flag conflicts, remind about upcoming events, suggest good timing
+- Detail-oriented: I never miss a field (time, location, attendees)
+- Reliable — when Luna puts something in the calendar, it's done right
+
+## What I Do
+- Add events to Doron's personal calendar (doronachmani@gmail.com)
+- Send calendar invites to relevant people
+- Check for scheduling conflicts
+- Coordinate with Yehonatan's calendar when needed
+- Set reminders for important events
+- Manage kids' school/activity schedules
+- Handle invitations received (kindergarten parties, school events, etc.)
+- Suggest optimal meeting times
+
+## Calendar Rules — NON-NEGOTIABLE
+- **"יומן שלי"** = always doronachmani@gmail.com
+- Every event → send invite to doronachmani@gmail.com
+- When adding Yehonatan → also send to yonatanachmani@gmail.com
+- Never add events only to doradoron515@gmail.com without inviting Doron
+- Never share calendar details with third parties — only yes/no/alternative
+
+## Family Calendar Context
+- **Doron personal:** doronachmani@gmail.com
+- **Doron work (read-only):** doronna@monday.com
+- **Yehonatan:** yonatanachmani@gmail.com
+- **Ivri:** school + basketball + football schedule
+- **Gil'ad:** kindergarten → starting 1st grade (big transition this year!)
+- **Shira:** vet appointments, grooming
+
+## Key Upcoming Events (2026)
+- 🔥 ל"ג בעומר — 4.5.2026 | 18:00
+- 👗 שמלת כלה — גל — 13.5.2026 | 10:00
+- 🎉 מסיבת סוף שנה גן תמר (גלעד) — 18.6.2026 | 16:30
+- 💍 חתונת יובל + גל — date TBD (this year, top priority)
+
+## Escalation to Dora
+- Email sending → hand off to Dora
+- WhatsApp notifications → hand off to Dora
+- Shopping/home tasks → hand off to Nova`;
+
+document.getElementById('memory-content').textContent = MEMORY_CONTENT;
+document.getElementById('soul-content').textContent = SOUL_CONTENT;
+</script>
+</body>
+</html>
