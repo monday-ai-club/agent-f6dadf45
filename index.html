@@ -236,11 +236,87 @@
             content: ''; flex: 1; height: 1px;
             background: rgba(255,255,255,0.06);
         }
+
+        /* ====== MOBILE RESPONSIVE ====== */
+        @media (max-width: 900px) {
+            body {
+                grid-template-columns: 1fr;
+                grid-template-rows: 56px 1fr auto;
+            }
+            .sidebar {
+                display: none;
+                position: fixed;
+                top: 56px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 50;
+                border-right: none;
+                overflow-y: auto;
+                max-height: calc(100vh - 56px);
+            }
+            .sidebar.open { display: block; }
+            .status-panel {
+                border-left: none;
+                border-top: 1px solid rgba(255,255,255,0.08);
+                padding: 16px;
+                grid-column: 1;
+            }
+            .agent-card { display: none; }
+            header { padding: 0 16px; }
+            .main { padding: 14px; }
+            .hamburger {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                width: 36px; height: 36px;
+                border: none;
+                background: rgba(255,255,255,0.06);
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 18px;
+                color: #e6edf3;
+                margin-right: 8px;
+                flex-shrink: 0;
+            }
+            .status-inline {
+                display: flex !important;
+                flex-wrap: wrap;
+                gap: 6px;
+                padding: 8px 0;
+            }
+            .status-inline .stat-row {
+                flex-direction: column;
+                gap: 1px;
+                padding: 6px 10px;
+                background: rgba(255,255,255,0.04);
+                border-radius: 8px;
+                border-bottom: none;
+                min-width: 90px;
+            }
+            .card-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .org-team-row { gap: 12px; }
+            .org-agent-card { min-width: 140px; max-width: 100%; padding: 14px; }
+            .org-ceo-card { padding: 16px 20px; min-width: 140px; }
+            .modal { padding: 18px 14px; }
+            .tabs { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+            .tab-btn { white-space: nowrap; font-size: 13px; padding: 8px 12px 12px; }
+            .auto-detail-row { flex-direction: column; gap: 2px; }
+            .auto-detail-row span:last-child { max-width: 100%; }
+        }
+        @media (max-width: 480px) {
+            .card-grid { grid-template-columns: 1fr 1fr; }
+            .org-team-row { flex-direction: column; align-items: center; }
+            .org-agent-card { width: 100%; max-width: 300px; min-width: unset; }
+            .org-horizontal-line, .org-agent-card::before { display: none; }
+            header h1 { font-size: 15px; }
+        }
     </style>
 </head>
 <body>
 
 <header>
+    <button class="hamburger" id="hamburger-btn" onclick="toggleSidebar()" style="display:none">☰</button>
     <div style="font-size:22px">🤖</div>
     <h1>Dora Admin Panel</h1>
     <span class="live-indicator">⚡ Live</span>
@@ -453,6 +529,7 @@
 </main>
 
 <div class="status-panel">
+    <div class="status-inline" style="display:none">
     <h3>Live Status</h3>
     <div class="agent-card">
         <div class="agent-avatar">🤖</div>
@@ -537,6 +614,22 @@ async function loadFile(filename, icon) {
 function closeModal(e) {
     if (e.target.id === 'modal') document.getElementById('modal').classList.remove('open');
 }
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const btn = document.getElementById('hamburger-btn');
+    sidebar.classList.toggle('open');
+    btn.textContent = sidebar.classList.contains('open') ? '✕' : '☰';
+}
+// Close sidebar when clicking outside
+document.addEventListener('click', function(e) {
+    const sidebar = document.querySelector('.sidebar');
+    const btn = document.getElementById('hamburger-btn');
+    if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== btn) {
+        sidebar.classList.remove('open');
+        btn.textContent = '☰';
+    }
+});
 </script>
 </body>
 </html>
